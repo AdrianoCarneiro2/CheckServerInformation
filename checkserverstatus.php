@@ -24,7 +24,7 @@
     <?php
     //Get ram usage
     $total_mem = preg_split('/ +/', @exec('grep MemTotal /proc/meminfo'));
-    $total_mem = $total_mem[1];
+    $total_mem = round($total_mem[1] / 1000000,2);
     $free_mem = preg_split('/ +/', @exec('grep MemFree /proc/meminfo'));
     $cache_mem = preg_split('/ +/', @exec('grep ^Cached /proc/meminfo'));
 
@@ -38,11 +38,11 @@
 * Display name and path to the moutpoint have to be provide, you can 
 */
  
-    $diskfree = round(disk_free_space(".") / 1000000000);
-    $disktotal = round(disk_total_space(".") / 1000000000);
-    $diskused = round($disktotal - $diskfree);
-    $diskusage = round($diskused/$disktotal*100);
-    $disk_free_precent = 100 - round($diskfree*1.0 / $disktotal*100, 2);
+    $disk_free = round(disk_free_space(".") / 1000000000);
+    $disk_total = round(disk_total_space(".") / 1000000000);
+    $disk_used = round($disk_total - $disk_free);
+    $disk_usage = round($disk_used/$disk_total*100);
+    $disk_free_precent = 100 - round($disk_free*1.0 / $disk_total*100, 2);
     ?>
 
     <body>
@@ -58,7 +58,7 @@
                 aria-valuemin="0" 
                 aria-valuemax="<?php echo $total_mem ?>" 
                 style="width:<?php echo $percentvalue ."%" ?>">
-                <?php echo $percentvalue ."%" ?>
+                <?php echo $percentvalue ."%" ?> (<?php echo $total_mem ."GB in total"?>)
                 </div>
             </div>
             </div>
@@ -67,11 +67,11 @@
                 Hard Drive Space
             <div class="progress">
                 <div class="progress-bar progress-bar-striped active" role="progressbar" 
-                aria-valuenow="<?php echo $diskfree ?>" 
+                aria-valuenow="<?php echo $disk_free ?>" 
                 aria-valuemin="0" 
-                aria-valuemax="<?php echo $disktotal ?>" 
+                aria-valuemax="<?php echo $disk_total ?>" 
                 style="width:<?php echo $disk_free_precent ."%" ?>">
-                <?php echo $diskused ." Gb" ?>
+                <?php echo $disk_free_precent ."%" ?> (<?php echo $disk_free ."GB in total"?>)
                 </div>
             </div>
             </div>
