@@ -30,8 +30,8 @@
     $cache_mem_ram = preg_split('/ +/', @exec('grep ^Cached /proc/meminfo'));
     $cache_mem_ram = $cache_mem_ram[1];
 
-    $percentvalue_ram = $free_mem_ram / $total_mem_ram;
-    $percentvalue_ram = $percentvalue_ram * 100;
+    $percent_value_ram = $free_mem_ram / $total_mem_ram;
+    $percent_value_ram = $percent_value_ram * 100;
 
 /*The disks array list all mountpoint you wan to check freespace
 * Display name and path to the moutpoint have to be provide 
@@ -41,7 +41,7 @@
     $disk_total = round(disk_total_space(".") / 1000000000);
     $disk_used = round($disk_total - $disk_free);
     $disk_usage = round($disk_used/$disk_total*100);
-    $disk_free_precent = 100 - round($disk_free*1.0 / $disk_total*100, 2);
+    $percent_disk_free = 100 - round($disk_free*1.0 / $disk_total*100, 2);
     
     ?>
 
@@ -57,8 +57,8 @@
                 aria-valuenow="<?php echo $free_mem_ram ?>" 
                 aria-valuemin="0" 
                 aria-valuemax="<?php echo $total_mem_ram ?>" 
-                style="width:<?php echo $percentvalue_ram ."%" ?>">
-                <?php echo round($percentvalue_ram, 2) ."%" ?> (<?php echo $total_mem_ram ."GB in total"?>)
+                style="width:<?php echo $percent_value_ram ."%" ?>">
+                <?php echo round($percent_value_ram, 2) ."%" ?> (<?php echo $total_mem_ram ."GB in total"?>)
                 </div>
             </div>
             </div>
@@ -70,8 +70,8 @@
                 aria-valuenow="<?php echo $free_mem_ram ?>" 
                 aria-valuemin="0" 
                 aria-valuemax="<?php echo $total_mem_ram ?>" 
-                style="width:<?php echo $percentvalue_ram ."%" ?>">
-                <?php echo round($percentvalue_ram, 2) ."%" ?> (<?php echo $total_mem_ram ."GB in total"?>)
+                style="width:<?php echo $percent_value_ram ."%" ?>">
+                <?php echo round($percent_value_ram, 2) ."%" ?> (<?php echo $total_mem_ram ."GB in total"?>)
                 </div>
             </div>
             </div>
@@ -83,8 +83,8 @@
                 aria-valuenow="<?php echo $disk_used ?>" 
                 aria-valuemin="0" 
                 aria-valuemax="<?php echo $disk_total ?>" 
-                style="width:<?php echo $disk_free_precent ."%" ?>">
-                <?php echo round($disk_free_precent, 2) ."%" ?> (<?php echo $disk_used ."GB in total"?>)
+                style="width:<?php echo $percent_disk_free ."%" ?>">
+                <?php echo round($percent_disk_free, 2) ."%" ?> (<?php echo $disk_used ."GB in total"?>)
                 </div>
             </div>
             </div>
