@@ -23,19 +23,18 @@
 <div class="container">
     <?php
     //Get ram usage
-    $total_mem = preg_split('/ +/', @exec('grep MemTotal /proc/meminfo'));
-    $total_mem = round($total_mem[1] / 1000000,2);
-    $free_mem = preg_split('/ +/', @exec('grep MemFree /proc/meminfo'));
-    $cache_mem = preg_split('/ +/', @exec('grep ^Cached /proc/meminfo'));
+    $total_mem_ram = preg_split('/ +/', @exec('grep MemTotal /proc/meminfo'));
+    $total_mem_ram = round($total_mem_ram[1] / 1000000, 2);
+    $free_mem_ram = preg_split('/ +/', @exec('grep MemFree /proc/meminfo'));
+    $free_mem_ram = round($free_mem_ram[1] / 1000000, 2);
+    $cache_mem_ram = preg_split('/ +/', @exec('grep ^Cached /proc/meminfo'));
+    $cache_mem_ram = $cache_mem_ram[1];
 
-    $percentvalue = $free_mem[1] / $total_mem;
-    $percentvalue = $percentvalue * 100;
+    $percentvalue_ram = $free_mem_ram / $total_mem_ram;
+    $percentvalue_ram = $percentvalue_ram * 100;
 
-    $free_mem = $free_mem[1] + $cache_mem[1];
-
-/*
-* The disks array list all mountpoint you wan to check freespace
-* Display name and path to the moutpoint have to be provide, you can 
+/*The disks array list all mountpoint you wan to check freespace
+* Display name and path to the moutpoint have to be provide 
 */
  
     $disk_free = round(disk_free_space(".") / 1000000000);
@@ -43,6 +42,7 @@
     $disk_used = round($disk_total - $disk_free);
     $disk_usage = round($disk_used/$disk_total*100);
     $disk_free_precent = 100 - round($disk_free*1.0 / $disk_total*100, 2);
+    
     ?>
 
     <body>
@@ -51,27 +51,40 @@
                 Server information
             </h4>
             <div>
-                Ram Memory
+               <h6>Ram Memory (<?php echo $free_mem_ram ."GB" ."/" ?>  <?php echo $total_mem_ram ."GB"?>)</h6>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped active" role="progressbar" 
-                aria-valuenow="<?php echo $free_mem ?>" 
+                aria-valuenow="<?php echo $free_mem_ram ?>" 
                 aria-valuemin="0" 
-                aria-valuemax="<?php echo $total_mem ?>" 
-                style="width:<?php echo $percentvalue ."%" ?>">
-                <?php echo $percentvalue ."%" ?> (<?php echo $total_mem ."GB in total"?>)
+                aria-valuemax="<?php echo $total_mem_ram ?>" 
+                style="width:<?php echo $percentvalue_ram ."%" ?>">
+                <?php echo round($percentvalue_ram, 2) ."%" ?> (<?php echo $total_mem_ram ."GB in total"?>)
+                </div>
+            </div>
+            </div>
+        
+            <div>
+               <h6>Ram Memory with cache (<?php echo $free_mem_ram ."GB" ."/" ?>  <?php echo $total_mem_ram ."GB"?>)</h6>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" 
+                aria-valuenow="<?php echo $free_mem_ram ?>" 
+                aria-valuemin="0" 
+                aria-valuemax="<?php echo $total_mem_ram ?>" 
+                style="width:<?php echo $percentvalue_ram ."%" ?>">
+                <?php echo round($percentvalue_ram, 2) ."%" ?> (<?php echo $total_mem_ram ."GB in total"?>)
                 </div>
             </div>
             </div>
 
             <div>
-                Hard Drive Space
+               <h6>Hard Drive Space (<?php echo $disk_used ."GB" ."/" ?>  <?php echo $disk_total ."GB"?>)</h6>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped active" role="progressbar" 
-                aria-valuenow="<?php echo $disk_free ?>" 
+                aria-valuenow="<?php echo $disk_used ?>" 
                 aria-valuemin="0" 
                 aria-valuemax="<?php echo $disk_total ?>" 
                 style="width:<?php echo $disk_free_precent ."%" ?>">
-                <?php echo $disk_free_precent ."%" ?> (<?php echo $disk_free ."GB in total"?>)
+                <?php echo round($disk_free_precent, 2) ."%" ?> (<?php echo $disk_used ."GB in total"?>)
                 </div>
             </div>
             </div>
