@@ -25,10 +25,17 @@
     //Get ram usage
     $total_mem_ram = preg_split('/ +/', @exec('grep MemTotal /proc/meminfo'));
     $total_mem_ram = round($total_mem_ram[1] / 1000000, 2);
+    
     $free_mem_ram = preg_split('/ +/', @exec('grep MemFree /proc/meminfo'));
     $free_mem_ram = round($free_mem_ram[1] / 1000000, 2);
+    
     $cache_mem_ram = preg_split('/ +/', @exec('grep ^Cached /proc/meminfo'));
-    $cache_mem_ram = $cache_mem_ram[1];
+    $cache_mem_ram = round($cache_mem_ram[1] / 1000000, 2);
+    
+    $free_mem_with_cache = $free_mem_ram + $cache_mem_ram;
+   
+    $percent_ram_with_cache = round($free_mem_ram / $total_mem_ram, 2);
+    $percent_ram_with_cache = $percent_ram_with_cache * 100;
 
     $percent_value_ram = $free_mem_ram / $total_mem_ram;
     $percent_value_ram = $percent_value_ram * 100;
@@ -64,14 +71,14 @@
             </div>
         
             <div>
-               <h6>Ram Memory with cache (<?php echo $free_mem_ram ."GB" ."/" ?>  <?php echo $total_mem_ram ."GB"?>)</h6>
+               <h6>Ram Memory with cache (<?php echo $free_mem_with_cache ."GB" ."/" ?>  <?php echo $total_mem_ram ."GB"?>)</h6>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped active" role="progressbar" 
-                aria-valuenow="<?php echo $free_mem_ram ?>" 
+                aria-valuenow="<?php echo $free_mem_with_cache ?>" 
                 aria-valuemin="0" 
                 aria-valuemax="<?php echo $total_mem_ram ?>" 
-                style="width:<?php echo $percent_value_ram ."%" ?>">
-                <?php echo round($percent_value_ram, 2) ."%" ?> (<?php echo $total_mem_ram ."GB in total"?>)
+                style="width:<?php echo $percent_ram_with_cache ."%" ?>">
+                <?php echo round($percent_ram_with_cache, 2) ."%" ?> (<?php echo $total_mem_ram ."GB in total"?>)
                 </div>
             </div>
             </div>
@@ -95,6 +102,49 @@
             <h4 class="card-header text-center">
                 Service Status
             </h4>
+            <div>
+                <table class='table table-striped table-sm'>
+                <tr><th>Service</th><th>Port</th><th>Status</th></tr>
+                <tbody>
+            <?php 
+            $services = array();
+
+            $services[] = array("port" => "80",       "service" => "Web server",                  "ip" => "") ;
+            $services[] = array("port" => "21",       "service" => "FTP",                     "ip" => "") ;
+            $services[] = array("port" => "3306",     "service" => "MYSQL",                   "ip" => "") ;
+            $services[] = array("port" => "22",       "service" => "Open SSH",				"ip" => "") ;
+            $services[] = array("port" => "58846",     "service" => "Deluge",             	"ip" => "") ;
+            $services[] = array("port" => "8112",     "service" => "Deluge Web",             	"ip" => "") ;
+            $services[] = array("port" => "80",       "service" => "Internet Connection",     "ip" => "google.com") ;
+            $services[] = array("port" => "8083",     "service" => "Vesta panel",             	"ip" => "") ;
+            
+            foreach($services as $service): ?>
+                    <tr>
+                        <td><?php echo $service['service']; ?></td>
+                        <td><?php echo $service['port']; ?></td>
+                        <td><?php 
+                        if($service['ip']==""){
+                            $service['ip'] = "localhost";
+                         }
+
+                        $fp = @fsockopen($service['ip'], $service['port'], $errno, $errstr, $timeout);
+                        if (!$fp) {
+                            $status_offline = "Offline";
+                            echo $status_offline;
+                        } else {
+                            $status_online = "Online";
+                            echo $status_online;
+                        }
+                       
+                        ?></td>
+                    </tr>
+                <?php endforeach; ?>
+  </tbody>
+                <?php 
+                 
+                 ?>
+                </table>
+            </div>
         </div>
     </body>
 </div>
