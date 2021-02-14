@@ -56,6 +56,10 @@
     $time_taken = $end_time - $start_time;
     $total_time = round($time_taken, 4);
 
+
+    //CPU USAGE
+    $load = sys_getloadavg();
+    $load = $load[0];
     ?>
 
     <body>
@@ -89,6 +93,15 @@
                     </div>
                 </div>
             </div>
+
+            <!--<div>
+                <h6>CPU Load</h6>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $load ?>" aria-valuemin="0" aria-valuemax="1">
+                        <?php echo $load ?>
+                    </div>
+                </div>
+            </div>-->
             </br>
             <div>
                 <table class='table table-striped table-sm'>
