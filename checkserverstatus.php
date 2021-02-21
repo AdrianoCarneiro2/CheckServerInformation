@@ -94,14 +94,6 @@
                 </div>
             </div>
 
-            <!--<div>
-                <h6>CPU Load</h6>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $load ?>" aria-valuemin="0" aria-valuemax="1">
-                        <?php echo $load ?>
-                    </div>
-                </div>
-            </div>-->
             </br>
             <div>
                 <table class='table table-striped table-sm'>
